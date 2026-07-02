@@ -14,7 +14,7 @@
 
 <meta name="date" content="2026-07-02" />
 
-<title>Negative control analyses based on Visium breast cancer data (HKG-ligand pairs)</title>
+<title>Negative control analyses based on Visium breast cancer data (HKG-receptor pairs)</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -150,7 +150,7 @@ code span.ot { color: #007020; }
 
 <section class="page-header">
 <h1 class="title toc-ignore project-name">Negative control analyses
-based on Visium breast cancer data (HKG-ligand pairs)</h1>
+based on Visium breast cancer data (HKG-receptor pairs)</h1>
 <h4 class="author project-author">Jia Zhao</h4>
 <h4 class="date project-date">July 2, 2026</h4>
 </section>
@@ -203,10 +203,10 @@ based on Visium breast cancer data (HKG-ligand pairs)</h1>
 <span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>gene_names_qc <span class="ot">&lt;-</span> <span class="fu">names</span>(gene_prop)[gene_prop <span class="sc">&gt;</span> sparsity_threshold] <span class="co"># genes that pass QC sparsity threshold</span></span>
 <span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>HKG_list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;C1orf43&quot;</span>,<span class="st">&quot;CHMP2A&quot;</span>,<span class="st">&quot;EMC7&quot;</span>,<span class="st">&quot;GPI&quot;</span>,<span class="st">&quot;PSMB2&quot;</span>,<span class="st">&quot;PSMB4&quot;</span>,<span class="st">&quot;RAB7A&quot;</span>,<span class="st">&quot;REEP5&quot;</span>,<span class="st">&quot;SNRPD3&quot;</span>,<span class="st">&quot;VCP&quot;</span>,<span class="st">&quot;VPS29&quot;</span>)</span>
 <span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>HKG_list <span class="ot">&lt;-</span> HKG_list[HKG_list <span class="sc">%in%</span> gene_names_qc]</span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="do">#### Form housekeeping gene-ligand pairs to be analyzed</span></span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="do">#### Form housekeeping gene-receptor pairs to be analyzed</span></span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>pairdb <span class="ot">&lt;-</span> pairdb[pairdb<span class="sc">$</span>annotation <span class="sc">==</span> <span class="st">&quot;Cell-Cell Contact&quot;</span>, ]</span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>target_qc_list <span class="ot">&lt;-</span> <span class="fu">unique</span>(pairdb<span class="sc">$</span>ligand_organized_qc)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>target_qc_list <span class="ot">&lt;-</span> <span class="fu">unique</span>(pairdb<span class="sc">$</span>receptor_organized_qc)</span>
 <span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>pairdb <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">ligand_organized_qc =</span> <span class="fu">rep</span>(HKG_list, <span class="fu">rep</span>(<span class="fu">length</span>(target_qc_list), <span class="fu">length</span>(HKG_list))),</span>
 <span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="at">receptor_organized_qc =</span> <span class="fu">rep</span>(target_qc_list, <span class="fu">length</span>(HKG_list))</span>
@@ -214,12 +214,12 @@ based on Visium breast cancer data (HKG-ligand pairs)</h1>
 <span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">length</span>(HKG_list) <span class="sc">*</span> <span class="fu">length</span>(target_qc_list) <span class="sc">==</span> <span class="fu">dim</span>(pairdb)[<span class="dv">1</span>])</span>
 <span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="fu">head</span>(pairdb)</span></code></pre></div>
 <pre><code>##   ligand_organized_qc receptor_organized_qc
-## 1             C1orf43                ADGRE5
-## 2             C1orf43                 ALCAM
-## 3             C1orf43                 ANXA1
-## 4             C1orf43                   APP
-## 5             C1orf43                  CD22
-## 6             C1orf43                  CD34</code></pre>
+## 1             C1orf43                  CD55
+## 2             C1orf43                   CD6
+## 3             C1orf43                  FPR3
+## 4             C1orf43                  CD74
+## 5             C1orf43                 PTPRC
+## 6             C1orf43                  SELP</code></pre>
 </div>
 <div id="spatial-interaction-inference-with-concise" class="section level2">
 <h2>Spatial interaction inference with CONCISE</h2>
@@ -251,11 +251,11 @@ based on Visium breast cancer data (HKG-ligand pairs)</h1>
 ##  statistical inference for each pair in pairdb
 ## Done!</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>P_value <span class="ot">&lt;-</span> pairdb<span class="sc">$</span>p_value</span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>P_value_adjust <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(P_value, <span class="at">method =</span> <span class="st">&quot;BY&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>P_value_adjust <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(P_value, <span class="at">method =</span> <span class="st">&quot;BH&quot;</span>)</span>
 <span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>pairdb<span class="sc">$</span>p_value_adjust <span class="ot">&lt;-</span> P_value_adjust</span>
 <span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>res_sig_BY <span class="ot">&lt;-</span> pairdb[pairdb<span class="sc">$</span>p_value_adjust <span class="sc">&lt;</span> <span class="fl">0.05</span>, ]</span>
 <span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Under this negative control setting, CONCISE reported &quot;</span>, <span class="fu">dim</span>(res_sig_BY)[<span class="dv">1</span>], <span class="st">&quot; interaction pairs.&quot;</span>))</span></code></pre></div>
-<pre><code>## [1] &quot;Under this negative control setting, CONCISE reported 0 interaction pairs.&quot;</code></pre>
+<pre><code>## [1] &quot;Under this negative control setting, CONCISE reported 1 interaction pairs.&quot;</code></pre>
 </div>
 </section>
 

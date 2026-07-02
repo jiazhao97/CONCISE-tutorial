@@ -14,7 +14,7 @@
 
 <meta name="date" content="2026-07-02" />
 
-<title>Negative control analyses based on Visium breast cancer data (HKG-ligand pairs)</title>
+<title>Negative control analyses based on Stereo-seq mouse embryo data (HKG-receptor pairs)</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -150,7 +150,7 @@ code span.ot { color: #007020; }
 
 <section class="page-header">
 <h1 class="title toc-ignore project-name">Negative control analyses
-based on Visium breast cancer data (HKG-ligand pairs)</h1>
+based on Stereo-seq mouse embryo data (HKG-receptor pairs)</h1>
 <h4 class="author project-author">Jia Zhao</h4>
 <h4 class="date project-date">July 2, 2026</h4>
 </section>
@@ -179,34 +179,34 @@ based on Visium breast cancer data (HKG-ligand pairs)</h1>
 <h2>Load inputs</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="do">#### Here, we load gene-by-cell count matrix and location matrix of this dataset.</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>rawcount <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="st">&quot;/gpfs/gibbs/pi/zhao/jz874/project/jiazhao/concise_pkg_reproduce/prepare_inputs/rawcount.rds&quot;</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>loc <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="st">&quot;/gpfs/gibbs/pi/zhao/jz874/project/jiazhao/concise_pkg_reproduce/prepare_inputs/loc.rds&quot;</span>)</span></code></pre></div>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>rawcount <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="st">&quot;/gpfs/gibbs/pi/zhao/jz874/project/jiazhao/concise_pkg_reproduce/prepare_inputs/stereoseq_rawcount.rds&quot;</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>loc <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="st">&quot;/gpfs/gibbs/pi/zhao/jz874/project/jiazhao/concise_pkg_reproduce/prepare_inputs/stereoseq_loc.rds&quot;</span>)</span></code></pre></div>
 </div>
-<div id="construct-housekeeping-gene-ligand-pairs" class="section level2">
-<h2>Construct housekeeping gene-ligand pairs</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="do">#### Load CellChat human database (from the package), and perform quality control for ligands and receptors based on sparsity</span></span>
+<div id="construct-housekeeping-gene-receptor-pairs" class="section level2">
+<h2>Construct housekeeping gene-receptor pairs</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="do">#### Load CellChat mouse database (from the package), and perform quality control for receptors and receptors based on sparsity</span></span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">data</span>(cellchatdb_human)</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>pairdb <span class="ot">&lt;-</span> cellchatdb.human</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">data</span>(cellchatdb_mouse)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>pairdb <span class="ot">&lt;-</span> cellchatdb.mouse</span>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>sparsity_threshold <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>pairdb <span class="ot">&lt;-</span> <span class="fu">InteractionDB</span>(<span class="at">pairdb =</span> pairdb,</span>
 <span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>                        <span class="at">rawcount =</span> rawcount,</span>
 <span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>                        <span class="at">sparsity_threshold =</span> sparsity_threshold)</span></code></pre></div>
-<pre><code>## Total number of ligands = 532
-## Total number of ligands after sparsity QC = 227
-## Total number of receptors = 490
-## Total number of receptors after sparsity QC = 295</code></pre>
+<pre><code>## Total number of ligands = 563
+## Total number of ligands after sparsity QC = 105
+## Total number of receptors = 493
+## Total number of receptors after sparsity QC = 197</code></pre>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="do">#### Prepare human housekeeping gene list</span></span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">dim</span>(rawcount)[<span class="dv">2</span>]</span>
 <span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>gene_prop <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(rawcount <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">/</span> n</span>
 <span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>gene_names_qc <span class="ot">&lt;-</span> <span class="fu">names</span>(gene_prop)[gene_prop <span class="sc">&gt;</span> sparsity_threshold] <span class="co"># genes that pass QC sparsity threshold</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>HKG_list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;C1orf43&quot;</span>,<span class="st">&quot;CHMP2A&quot;</span>,<span class="st">&quot;EMC7&quot;</span>,<span class="st">&quot;GPI&quot;</span>,<span class="st">&quot;PSMB2&quot;</span>,<span class="st">&quot;PSMB4&quot;</span>,<span class="st">&quot;RAB7A&quot;</span>,<span class="st">&quot;REEP5&quot;</span>,<span class="st">&quot;SNRPD3&quot;</span>,<span class="st">&quot;VCP&quot;</span>,<span class="st">&quot;VPS29&quot;</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>HKG_list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Actb&quot;</span>,<span class="st">&quot;Atp5f1&quot;</span>,<span class="st">&quot;Atp5pb&quot;</span>,<span class="st">&quot;B2m&quot;</span>,<span class="st">&quot;Gapdh&quot;</span>,<span class="st">&quot;Hprt1&quot;</span>,<span class="st">&quot;Hprt&quot;</span>,<span class="st">&quot;Pgk1&quot;</span>,<span class="st">&quot;Rer1&quot;</span>,<span class="st">&quot;Rpl13a&quot;</span>,<span class="st">&quot;Rpl27&quot;</span>,<span class="st">&quot;Sdha&quot;</span>,<span class="st">&quot;Tbp&quot;</span>,<span class="st">&quot;Ubc&quot;</span>)</span>
 <span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>HKG_list <span class="ot">&lt;-</span> HKG_list[HKG_list <span class="sc">%in%</span> gene_names_qc]</span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="do">#### Form housekeeping gene-ligand pairs to be analyzed</span></span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="do">#### Form housekeeping gene-receptor pairs to be analyzed</span></span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>pairdb <span class="ot">&lt;-</span> pairdb[pairdb<span class="sc">$</span>annotation <span class="sc">==</span> <span class="st">&quot;Cell-Cell Contact&quot;</span>, ]</span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>target_qc_list <span class="ot">&lt;-</span> <span class="fu">unique</span>(pairdb<span class="sc">$</span>ligand_organized_qc)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>target_qc_list <span class="ot">&lt;-</span> <span class="fu">unique</span>(pairdb<span class="sc">$</span>receptor_organized_qc)</span>
 <span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>pairdb <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">ligand_organized_qc =</span> <span class="fu">rep</span>(HKG_list, <span class="fu">rep</span>(<span class="fu">length</span>(target_qc_list), <span class="fu">length</span>(HKG_list))),</span>
 <span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="at">receptor_organized_qc =</span> <span class="fu">rep</span>(target_qc_list, <span class="fu">length</span>(HKG_list))</span>
@@ -214,12 +214,12 @@ based on Visium breast cancer data (HKG-ligand pairs)</h1>
 <span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">length</span>(HKG_list) <span class="sc">*</span> <span class="fu">length</span>(target_qc_list) <span class="sc">==</span> <span class="fu">dim</span>(pairdb)[<span class="dv">1</span>])</span>
 <span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="fu">head</span>(pairdb)</span></code></pre></div>
 <pre><code>##   ligand_organized_qc receptor_organized_qc
-## 1             C1orf43                ADGRE5
-## 2             C1orf43                 ALCAM
-## 3             C1orf43                 ANXA1
-## 4             C1orf43                   APP
-## 5             C1orf43                  CD22
-## 6             C1orf43                  CD34</code></pre>
+## 1                Actb                 L1cam
+## 2                Actb                 Epha3
+## 3                Actb                 Epha4
+## 4                Actb                 Epha5
+## 5                Actb                 Epha7
+## 6                Actb                 Ephb2</code></pre>
 </div>
 <div id="spatial-interaction-inference-with-concise" class="section level2">
 <h2>Spatial interaction inference with CONCISE</h2>
@@ -229,7 +229,7 @@ based on Visium breast cancer data (HKG-ligand pairs)</h1>
 <span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="at">pairdb =</span> pairdb,</span>
 <span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>  <span class="at">rawcount =</span> rawcount,</span>
 <span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>  <span class="at">loc =</span> loc,</span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>  <span class="at">Wx_distance_threshold =</span> <span class="fl">2.3</span>)</span></code></pre></div>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>  <span class="at">Wx_distance_threshold =</span> <span class="fl">1.3</span>)</span></code></pre></div>
 <pre><code>## Creating spatial kernels...
 ##  marginal kernel 1
 ##  marginal kernel 2
@@ -255,7 +255,7 @@ based on Visium breast cancer data (HKG-ligand pairs)</h1>
 <span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>pairdb<span class="sc">$</span>p_value_adjust <span class="ot">&lt;-</span> P_value_adjust</span>
 <span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>res_sig_BY <span class="ot">&lt;-</span> pairdb[pairdb<span class="sc">$</span>p_value_adjust <span class="sc">&lt;</span> <span class="fl">0.05</span>, ]</span>
 <span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Under this negative control setting, CONCISE reported &quot;</span>, <span class="fu">dim</span>(res_sig_BY)[<span class="dv">1</span>], <span class="st">&quot; interaction pairs.&quot;</span>))</span></code></pre></div>
-<pre><code>## [1] &quot;Under this negative control setting, CONCISE reported 0 interaction pairs.&quot;</code></pre>
+<pre><code>## [1] &quot;Under this negative control setting, CONCISE reported 1 interaction pairs.&quot;</code></pre>
 </div>
 </section>
 
