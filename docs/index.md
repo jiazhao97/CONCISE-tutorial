@@ -32,3 +32,7 @@ library(CONCISE)
 Use `CONCISE`
 -------------------
 Example Analysis with CONCISE: [here](https://jiazhao97.github.io/CONCISE-tutorial/documentation/03_Experiments.html).
+
+Cite `CONCISE`
+-------------------
+Jia Zhao, Xinning Shan, Gefei Wang, Tinyi Chu, Chen Lin, Rui Chang, Hongyu Zhao. Spatial co-expression and cell-cell communication inference from spatially resolved transcriptomics with CONCISE. 2026.
